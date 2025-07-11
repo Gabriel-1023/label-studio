@@ -641,6 +641,12 @@ class ExportConvertAPI(generics.RetrieveAPIView):
     queryset = Export.objects.all()
     lookup_url_kwarg = 'export_pk'
     permission_required = all_permissions.projects_change
+    serializer_class = ExportSerializer
+
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            return ExportConvertSerializer
+        return ExportSerializer
 
     def post(self, request, *args, **kwargs):
         snapshot = self.get_object()

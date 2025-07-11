@@ -2,6 +2,7 @@ import hashlib
 import io
 import json
 import logging
+import os
 import pathlib
 import shutil
 from datetime import datetime
@@ -320,10 +321,13 @@ class ExportMixin:
             out_dir = pathlib.Path(tmp_dir) / OUT
             out_dir.mkdir(mode=0o700, parents=True, exist_ok=True)
 
+            # 修复：使用真正的上传目录，而不是临时目录
+            upload_dir = os.path.join(settings.MEDIA_ROOT, settings.UPLOAD_DIR)
+
             converter = Converter(
                 config=self.project.get_parsed_config(),
                 project_dir=None,
-                upload_dir=out_dir,
+                upload_dir=upload_dir,
                 download_resources=download_resources,
                 # for downloading resource we need access to the API
                 access_token=self.project.organization.created_by.auth_token.key,
