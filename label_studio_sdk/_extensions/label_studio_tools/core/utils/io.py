@@ -104,7 +104,7 @@ def get_local_path(
     if url.startswith("upload") or url.startswith("/upload"):
         url = "/data" + ("" if url.startswith("/") else "/") + url
 
-    is_uploaded_file = url.startswith("/data/upload")
+    is_uploaded_file = url.startswith("/data/upload") or "/data/upload" in url
     is_local_storage_file = url.startswith("/data/") and "?d=" in url
     is_cloud_storage_file = (
         url.startswith("s3:") or url.startswith("gs:") or url.startswith("azure-blob:")
