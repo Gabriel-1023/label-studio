@@ -109,6 +109,8 @@ def get_local_path(
     is_cloud_storage_file = (
         url.startswith("s3:") or url.startswith("gs:") or url.startswith("azure-blob:")
     )
+    logger.debug(f"url: {url}, image_dir: {image_dir}, project_dir: {project_dir}, is_uploaded_file: {is_uploaded_file}, "
+                 f"is_local_storage_file: {is_local_storage_file}, is_cloud_storage_file: {is_cloud_storage_file}")
 
     # Local storage file: try to load locally otherwise download below
     # this code allow to read Local Storage files directly from a directory
@@ -138,6 +140,7 @@ def get_local_path(
     if is_uploaded_file and os.path.exists(image_dir):
         project_id = url.split("/")[-2]  # To retrieve project_id
         filepath = os.path.join(image_dir, project_id, os.path.basename(url))
+        logger.debug(f"url: {url}, file_path: {filepath}")
         if os.path.exists(filepath):
             if cache_dir and download_resources:
                 shutil.copy(filepath, cache_dir)
