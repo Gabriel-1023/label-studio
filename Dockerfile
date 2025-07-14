@@ -101,7 +101,10 @@ RUN --mount=type=cache,target=$POETRY_CACHE_DIR,sharing=locked \
 
 # Install LS
 COPY label_studio label_studio
+COPY label_studio_sdk label_studio_sdk
 RUN --mount=type=cache,target=$POETRY_CACHE_DIR,sharing=locked \
+    # Install local label_studio_sdk
+    cd label_studio_sdk && pip install -e . && cd .. && \
     # `--extras uwsgi` is mandatory here due to poetry bug: https://github.com/python-poetry/poetry/issues/7302
     poetry install --only-root --extras uwsgi && \
     python3 label_studio/manage.py collectstatic --no-input
@@ -167,6 +170,7 @@ COPY --chown=1001:0 deploy deploy
 
 # Copy files from build stages
 COPY --chown=1001:0 --from=venv-builder               $LS_DIR                                           $LS_DIR
+COPY --chown=1001:0 label_studio_sdk                  $LS_DIR/label_studio_sdk
 COPY --chown=1001:0 --from=py-version-generator       $LS_DIR/label_studio/core/version_.py             $LS_DIR/label_studio/core/version_.py
 COPY --chown=1001:0 --from=frontend-builder           $LS_DIR/web/dist                                  $LS_DIR/web/dist
 COPY --chown=1001:0 --from=frontend-version-generator $LS_DIR/web/dist/apps/labelstudio/version.json    $LS_DIR/web/dist/apps/labelstudio/version.json
