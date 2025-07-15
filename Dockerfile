@@ -104,7 +104,7 @@ COPY label_studio label_studio
 COPY label_studio_sdk label_studio_sdk
 RUN --mount=type=cache,target=$POETRY_CACHE_DIR,sharing=locked \
     # Install local label_studio_sdk
-    cd label_studio_sdk && pip install -e . && cd .. && \
+    cd label_studio_sdk && python3 -m pip install -e . && cd .. && \
     # `--extras uwsgi` is mandatory here due to poetry bug: https://github.com/python-poetry/poetry/issues/7302
     poetry install --only-root --extras uwsgi && \
     python3 label_studio/manage.py collectstatic --no-input
